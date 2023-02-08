@@ -49,8 +49,7 @@ const receiveGroupMemberRequest = (app: App, userId: string) => receive(app, {
   userId,
 })
 
-
-describe('@koishijs/plugin-verifier', () => {
+describe('koishi-plugin-verifier', () => {
   it('request handler: undefined', async () => {
     const instance = await setup({})
 

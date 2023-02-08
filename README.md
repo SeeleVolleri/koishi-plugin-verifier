@@ -3,7 +3,7 @@
 [![Codecov](https://img.shields.io/codecov/c/verifier/koishijs/koishi-plugin-verifier?style=flat-square)](https://codecov.io/gh/koishijs/koishi-plugin-verifier)
 [![npm](https://img.shields.io/npm/v/koishi-plugin-verifier?style=flat-square)](https://www.npmjs.com/package/koishi-plugin-verifier)
 
-配置机器人接收到各类申请时的行为。
+koishi-plugin-verifier 可用于处理机器人接收到的各类申请。
 
 ## 文档
 
