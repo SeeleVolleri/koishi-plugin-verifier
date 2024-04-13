@@ -41,21 +41,28 @@ async function checkChannelAuthority(session: Session, authority: number): Promi
 export const name = 'verifier'
 
 export interface Config {
+  onRequestSleepMs?: RequestSleepMs
   onFriendRequest?: RequestHandler
   onGuildMemberRequest?: RequestHandler
   onGuildRequest?: RequestHandler
 }
 
 export const Config: Schema<Config> = Schema.object({
+  onRequestSleepMs: RequestHandler.description('响应前等待？留空不等待，单位毫秒。')
   onFriendRequest: RequestHandler.description('如何响应好友请求？'),
   onGuildMemberRequest: RequestHandler.description('如何响应入群申请？'),
   onGuildRequest: RequestHandler.description('如何响应入群邀请？'),
 })
 
 export function apply(ctx: Context, config: Config = {}) {
-  const { onFriendRequest, onGuildRequest, onGuildMemberRequest } = config
+  const { onRequestSleepMs, onFriendRequest, onGuildRequest, onGuildMemberRequest } = config
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   ctx.on('friend-request', async (session) => {
+    await sleep(config.onRequestSleepMs || 0);
     const result = typeof onFriendRequest === 'number'
       ? await checkUserAuthority(session, onFriendRequest)
       : await useGeneralHandler(onFriendRequest, session, true)
@@ -63,6 +70,7 @@ export function apply(ctx: Context, config: Config = {}) {
   })
 
   ctx.on('guild-request', async (session) => {
+    await sleep(config.onRequestSleepMs || 0);
     const result = typeof onGuildRequest === 'number'
       ? await checkChannelAuthority(session, onGuildRequest)
       : await useGeneralHandler(onGuildRequest, session, false)
@@ -70,6 +78,7 @@ export function apply(ctx: Context, config: Config = {}) {
   })
 
   ctx.on('guild-member-request', async (session) => {
+    await sleep(config.onRequestSleepMs || 0);
     const result = typeof onGuildMemberRequest === 'number'
       ? await checkUserAuthority(session, onGuildMemberRequest)
       : await useGeneralHandler(onGuildMemberRequest, session, false)
